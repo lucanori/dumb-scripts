@@ -1,0 +1,22 @@
+- type: custom-api
+  title: OpenRouter Stats
+  cache: 1h
+  url: https://openrouter.ai/api/v1/credits
+  headers:
+    Authorization: Bearer ${OPENROUTER_API_KEY}
+    Accept: application/json
+  template: |
+    <div class="flex justify-evenly text-center">
+      <div>
+          <div class="color-highlight size-h3">${{ printf "%.2f" (.JSON.Float "data.total_credits") }}</div>
+          <div class="size-h6">TOTAL CREDITS</div>
+      </div>
+      <div>
+          <div class="color-highlight size-h3">${{ printf "%.2f" (.JSON.Float "data.total_usage") }}</div>
+          <div class="size-h6">TOTAL USAGE</div>
+      </div>
+      <div>
+          <div class="color-highlight size-h3">${{ printf "%.2f" (sub (.JSON.Float "data.total_credits") (.JSON.Float "data.total_usage")) }}</div>
+          <div class="size-h6">REMAINING</div>
+      </div>
+    </div>

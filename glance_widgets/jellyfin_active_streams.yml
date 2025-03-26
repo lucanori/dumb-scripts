@@ -1,0 +1,35 @@
+- type: custom-api
+  title: Jellyfin streams
+  cache: 2m
+  url: https://${JELLYFIN_URL}/Sessions
+  headers:
+    X-Emby-Token: ${JELLYFIN_API_KEY}
+    Accept: application/json
+  template: |
+    <div class="flex justify-evenly text-center items-center">
+      <div>
+          <div class="color-highlight size-h3">{{ $floatCount := toFloat 0 }}{{ range .JSON.Array "" }}{{ if .Exists "NowPlayingItem" }}{{ $floatCount = add $floatCount (toFloat 1) }}{{ end }}{{ end }}{{ $intCount := toInt $floatCount }}{{ $intCount }}</div>
+          <div class="size-h6">ACTIVE STREAMS</div>
+      </div>
+      {{ if gt $intCount 0 }}
+      <div class="flex flex-wrap gap-10">
+          {{ range .JSON.Array "" }}
+          {{ if .Exists "NowPlayingItem" }}
+            {{ $userId := .String "UserId" }}
+            {{ $imageTag := .String "UserPrimaryImageTag" }}
+            <div>
+              {{ if $imageTag }}
+                <img src="https://${JELLYFIN_URL}/Users/{{ $userId }}/Images/Primary?tag={{ $imageTag }}"
+                     class="rounded-15"
+                     alt="Profile Pic"
+                     height="45" />
+              {{ else }}
+                <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/png/autokitteh-light.png" alt="Default User" height="50" />
+              {{ end }}
+              <p>{{ .String "UserName" }}</p>
+            </div>
+          {{ end }}
+        {{ end }}
+      </div>
+      {{ end }}
+    </div>

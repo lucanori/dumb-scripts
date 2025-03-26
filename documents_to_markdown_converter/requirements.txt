@@ -1,0 +1,4 @@
+mistralai
+tqdm
+Pillow
+python-dotenv

@@ -1,0 +1,89 @@
+- type: custom-api
+  title: Unraid Server Stats
+  cache: 1m
+  url: http://${UNRAID_IP}:24940
+  headers:
+    Accept: application/json
+  template: |
+    <div class="flex justify-evenly">
+      <div class="flex justify-between items-start gap-20">
+        <!-- Storage section -->
+        <div class="flex-1">
+          <div class="size-h5 font-bold color-highlight margin-bottom-7">Storage</div>
+          <div class="flex gap-20">
+            <!-- Array storage -->
+            <div class="flex-1">
+              <div class="flex items-center gap-5 margin-bottom-3">
+                <div class="size-h4 color-primary">{{ printf "%.1f" (.JSON.Float "array_total.used_percent") }}%</div>
+                <div class="progress-bar flex-1">
+                  <div class="progress-value" style="--percent: {{ .JSON.Float "array_total.used_percent" }}"></div>
+                </div>
+              </div>
+              <div class="size-h6 color-highlight">ARRAY</div>
+              <div class=" color-paragraph">{{ printf "%.2f" (div (.JSON.Int "array_total.used" | toFloat) 1024) }}/{{ printf "%.2f" (div (.JSON.Int "array_total.total" | toFloat) 1024) }} TB</div>
+            </div>
+            <!-- Cache storage -->
+            <div class="flex-1">
+              <div class="flex items-center gap-5 margin-bottom-3">
+                <div class="size-h4 color-primary">{{ printf "%.1f" (.JSON.Float "cache_total.used_percent") }}%</div>
+                <div class="progress-bar flex-1">
+                  <div class="progress-value" style="--percent: {{ .JSON.Float "cache_total.used_percent" }}"></div>
+                </div>
+              </div>
+              <div class="size-h6 color-highlight">CACHE</div>
+              <div class=" color-paragraph">{{ printf "%.2f" (div (.JSON.Int "cache_total.used" | toFloat) 1024) }}/{{ printf "%.2f" (div (.JSON.Int "cache_total.total" | toFloat) 1024) }} TB</div>
+            </div>
+          </div>
+        </div>
+        <!-- System section -->
+        <div class="flex-1">
+          <div class="size-h5 font-bold color-highlight margin-bottom-7">System</div>
+          <div class="flex gap-20">
+            <!-- CPU stats -->
+            <div class="flex-1">
+              <div class="flex items-center gap-5 margin-bottom-3">
+                <div class="size-h4 color-primary">{{ printf "%.1f" (.JSON.Float "cpu.load_percent") }}%</div>
+                <div class="progress-bar flex-1">
+                  <div class="progress-value{{ if ge (printf "%.0f" (.JSON.Float "cpu.load_percent")) "80" }} progress-value-notice{{ end }}" 
+                       style="--percent: {{ .JSON.Float "cpu.load_percent" }}"></div>
+                </div>
+              </div>
+              <div class="size-h6 color-highlight">CPU</div>
+              <div class=" color-paragraph">{{ .JSON.Int "cpu.temp" }}°C</div>
+            </div>
+            <!-- RAM stats -->
+            <div class="flex-1">
+              <div class="flex items-center gap-5 margin-bottom-3">
+                <div class="size-h4 color-primary">{{ printf "%.1f" (.JSON.Float "memory.used_percent") }}%</div>
+                <div class="progress-bar flex-1">
+                  <div class="progress-value{{ if ge (printf "%.0f" (.JSON.Float "memory.used_percent")) "80" }} progress-value-notice{{ end }}" 
+                       style="--percent: {{ .JSON.Float "memory.used_percent" }}"></div>
+                </div>
+              </div>
+              <div class="size-h6 color-highlight">RAM</div>
+              <div class=" color-paragraph">{{ printf "%.1f" (div (.JSON.Int "memory.used" | toFloat) 1024) }}/{{ printf "%.1f" (div (.JSON.Int "memory.total" | toFloat) 1024) }} GB</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Disks section -->
+      <div class="margin-top-10">
+        <div class="size-h5 font-bold color-highlight margin-bottom-7">Disk Temperatures</div>
+        <div class="flex flex-wrap gap-10">
+          {{ range .JSON.Array "array" }}
+            <div class=" relative">
+              <div class="size-h6 color-highlight">{{ .String "mount" }}</div>
+              <div class="size-h5 text-center" style="color: {{ if lt (.Int "temp") 40 }}hsla(120, 70%, 35%, 1){{ else if lt (.Int "temp") 50 }}hsla(40, 70%, 50%, 1){{ else }}hsla(0, 70%, 50%, 1){{ end }}">{{ .Int "temp" }}°C</div>
+            </div>
+          {{ end }}
+          {{ range .JSON.Array "parity" }}
+            {{ if ne (.String "disk_id") "" }}
+              <div class=" relative">
+                <div class="size-h6 color-highlight">{{ .String "name" }}</div>
+                <div class="size-h5 text-center" style="color: {{ if lt (.Int "temp") 40 }}hsla(120, 70%, 35%, 1){{ else if lt (.Int "temp") 50 }}hsla(40, 70%, 50%, 1){{ else }}hsla(0, 70%, 50%, 1){{ end }}">{{ .Int "temp" }}°C</div>
+              </div>
+            {{ end }}
+          {{ end }}
+        </div>
+      </div>
+    </div>

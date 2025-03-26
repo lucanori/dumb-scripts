@@ -1,0 +1,36 @@
+# Minecraft Log Manager Configuration Example
+
+# --- Global Settings ---
+
+# Path to the log file for this script's operations.
+# Can be an absolute path or relative to where the script is run.
+LOG_FILE=./minecraft_log_manager.log
+
+# Maximum number of lines to keep in this script's log file (LOG_FILE).
+# Older lines will be removed.
+LOG_MAX_LINES=1000
+
+# Maximum number of lines to keep in each server's screen.log file (if found).
+# Older lines will be removed. Set to 0 to disable screen.log rotation.
+SCREEN_LOG_MAX_LINES=10000
+
+# --- Server Configurations ---
+# Define each Minecraft server log directory you want to manage.
+#
+# FORMAT: SERVER_NAME|/path/to/server/logs|number_of_logs_to_keep
+#
+# - SERVER_NAME: A unique name for the server (used in logs).
+# - /path/to/server/logs: The absolute path to the directory containing the .log.gz files.
+# - number_of_logs_to_keep: How many of the newest .log.gz files to keep. Older files will be deleted.
+
+# --- Examples ---
+# (Remove or modify these examples for your setup)
+
+# Example 1: A survival server, keeping the latest 30 log archives
+# SURVIVAL|/srv/minecraft/survival/logs|30
+
+# Example 2: A creative server, keeping the latest 15 log archives
+# CREATIVE|/opt/minecraft_servers/creative/logs|15
+
+# Example 3: A server with logs in a user's home directory (adjust path)
+# MY_TEST_SERVER|/home/user/mc_server_test/logs|7
