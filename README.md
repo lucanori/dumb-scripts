@@ -10,6 +10,7 @@ A collection of simple, single-purpose scripts for various tasks.
 *   **[image_optimization_for_websites](./image_optimization_for_websites/)**: Optimizes and converts images to AVIF or WebP formats, resizing them and adjusting quality based on image dimensions.
 *   **[minecraft_log_manager](./minecraft_log_manager/)**: Manages log files for multiple Minecraft server instances, keeping a configurable number of recent logs and rotating large `screen.log` files.
 *   **[stt_from_audio_or_video](./stt_from_audio_or_video/)**: Transcribes audio and video files using Groq's Whisper API, automatically optimizing large or unsupported files with ffmpeg.
+*   **[glance_widgets](./glance_widgets/)**: Custom widgets for the [Glance](https://github.com/dgl/glance) system monitoring tool (e.g., Unraid stats, Jellyfin streams, OpenRouter credits).
 *   **[galaxybook_kb_brightness_sync](./galaxybook_kb_brightness_sync/)**: Adjusts keyboard backlight brightness based on display brightness percentage, primarily for Samsung Galaxy Book devices using the `samsung-galaxybook::kbd_backlight` device provided by the [samsung-galaxybook-extras](https://github.com/joshuagrisham/samsung-galaxybook-extras) kernel module via `brightnessctl`.
 
 Each directory contains the specific script(s) and its own detailed README file with setup and usage instructions.
