@@ -15,25 +15,49 @@ A tool for converting PDF documents (especially slides) to Markdown format using
 
 ## Requirements
 
--   Python 3.6+
+-   Python 3.8+
 -   Dependencies listed in `requirements.txt` (`mistralai`, `tqdm`, `Pillow`, `python-dotenv`)
 -   A Mistral API Key
+-   uv (for fast dependency management)
 
 ## Setup
 
-1.  **Clone the repository:**
+1.  **Install uv (if not already installed):**
+    ```bash
+    # Install uv using pip
+    pip install uv
+    
+    # Or install system-wide without Python from GitHub releases:
+    # curl -LsSf https://astral.sh/uv/install.sh | sh
+    ```
+
+2.  **Clone the repository:**
     ```bash
     git clone <your-repo-url>
     cd <repo-directory>/documents_to_markdown_converter
     ```
-2.  **Install dependencies:**
-    It's recommended to use a virtual environment:
+
+3.  **Create virtual environment and install dependencies:**
+    Using uv (recommended for faster installation):
+    ```bash
+    # Create virtual environment
+    uv venv
+    
+    # Activate virtual environment
+    source .venv/bin/activate  # On Windows use `.venv\Scripts\activate`
+    
+    # Install dependencies with uv
+    uv pip install -r requirements.txt
+    ```
+    
+    Alternative with traditional pip (if uv is not available):
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`
     pip install -r requirements.txt
     ```
-3.  **Configure API Key:**
+
+4.  **Configure API Key:**
     -   Copy the example environment file:
         ```bash
         cp .env.example .env
@@ -42,9 +66,8 @@ A tool for converting PDF documents (especially slides) to Markdown format using
         ```
         MISTRAL_API_KEY=your_api_key_here
         ```
-    *Note: The `.env` file is ignored by Git (it will be added to `.gitignore` later) to prevent accidentally committing your key.*
 
-4.  **Prepare Input:**
+5.  **Prepare Input:**
     Place the PDF files you want to convert into the `input` directory (or specify a different directory using the `--input` option).
 
 ## Usage
@@ -85,6 +108,25 @@ python main.py --batch
 python main.py --debug
 ```
 
+## Development
+
+### Adding Dependencies
+When adding new dependencies to the project:
+```bash
+# Add a new package
+uv pip install package-name
+
+# Update requirements.txt
+uv pip freeze > requirements.txt
+```
+
+### Using uv for Tool Execution
+You can also run the tool directly with uv without activating the virtual environment:
+```bash
+# Run with uv (automatically uses the project's virtual environment)
+uv run python main.py [options]
+```
+
 ## Project Structure
 
 -   `main.py`: Main script orchestrating the conversion process.
@@ -98,3 +140,12 @@ python main.py --debug
 -   `.env.example`: Example environment file for API key configuration.
 -   `input/`: Default directory for input PDF files.
 -   `output/`: Default directory for output Markdown files and images.
+
+## Performance Benefits
+
+By using uv instead of pip, you'll experience:
+-   **10-100x faster** dependency installation and resolution
+-   **Improved caching** that reduces redundant downloads
+-   **Better dependency conflict resolution**
+
+For more information about uv, visit the [official documentation](https://docs.astral.sh/uv/).
