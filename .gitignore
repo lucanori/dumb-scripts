@@ -65,6 +65,7 @@ yarn-error.log*
 # documents_to_markdown_converter
 documents_to_markdown_converter/input/
 documents_to_markdown_converter/output/
+documents_to_markdown_converter/ocr_batch.jsonl
 
 # download_selfhst_icons
 download_selfhst_icons/icons/

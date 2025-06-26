@@ -6,15 +6,15 @@ from logging_setup import get_logger
 logger = get_logger()
 
 def parse_arguments():
-    parser = argparse.ArgumentParser(description='Convert PDF slides to markdown using Mistral OCR')
+    parser = argparse.ArgumentParser(description='Convert documents to markdown using Mistral OCR. Supports PDF, PPTX, DOCX, PNG, JPEG, and AVIF files.')
     parser.add_argument('--input', '-i', type=str, default='input', 
-                        help='Input directory containing PDF files')
+                        help='Input directory containing document files')
     parser.add_argument('--output', '-o', type=str, default='output',
                         help='Output directory for markdown files')
     parser.add_argument('--batch', '-b', action='store_true',
-                        help='Use batch processing for multiple PDFs')
+                        help='Use batch processing for multiple files')
     parser.add_argument('--auto', '-a', action='store_true',
-                        help='Automatically switch to batch processing if multiple PDFs need processing')
+                        help='Automatically switch to batch processing if multiple files need processing')
     parser.add_argument('--debug', '-d', action='store_true',
                         help='Enable debug logging')
     return parser.parse_args()

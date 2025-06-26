@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 
 def setup_logging(log_level=logging.INFO):
-    logger = logging.getLogger("slides_to_md")
+    logger = logging.getLogger("documents_to_markdown")
     logger.setLevel(log_level)
     
     console_handler = logging.StreamHandler(sys.stdout)
@@ -18,4 +18,4 @@ def setup_logging(log_level=logging.INFO):
     return logger
 
 def get_logger():
-    return logging.getLogger("slides_to_md")
+    return logging.getLogger("documents_to_markdown")

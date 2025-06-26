@@ -7,40 +7,73 @@ from logging_setup import get_logger
 
 logger = get_logger()
 
-def is_already_transcribed(pdf_path, output_dir):
-    pdf_stem = Path(pdf_path).stem
-    pdf_output_dir = os.path.join(output_dir, pdf_stem)
-    md_filename = f"{pdf_stem}.md"
-    md_path = os.path.join(pdf_output_dir, md_filename)
+SUPPORTED_DOCUMENT_EXTENSIONS = {'.pdf', '.pptx', '.docx'}
+SUPPORTED_IMAGE_EXTENSIONS = {'.png', '.jpg', '.jpeg', '.avif'}
+ALL_SUPPORTED_EXTENSIONS = SUPPORTED_DOCUMENT_EXTENSIONS | SUPPORTED_IMAGE_EXTENSIONS
+
+def get_supported_files(directory):
+    supported_files = []
+    if not os.path.exists(directory):
+        return supported_files
+    
+    for filename in os.listdir(directory):
+        file_path = os.path.join(directory, filename)
+        if os.path.isfile(file_path):
+            extension = Path(filename).suffix.lower()
+            if extension in ALL_SUPPORTED_EXTENSIONS:
+                supported_files.append(filename)
+    
+    return supported_files
+
+def get_file_type(file_path):
+    extension = Path(file_path).suffix.lower()
+    if extension in SUPPORTED_DOCUMENT_EXTENSIONS:
+        return "document"
+    elif extension in SUPPORTED_IMAGE_EXTENSIONS:
+        return "image"
+    else:
+        return "unsupported"
+
+def get_mime_type(file_path):
+    extension = Path(file_path).suffix.lower()
+    mime_types = {
+        '.pdf': 'application/pdf',
+        '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        '.png': 'image/png',
+        '.jpg': 'image/jpeg',
+        '.jpeg': 'image/jpeg',
+        '.avif': 'image/avif'
+    }
+    return mime_types.get(extension, 'application/octet-stream')
+
+def is_already_transcribed(file_path, output_dir):
+    file_stem = Path(file_path).stem
+    file_output_dir = os.path.join(output_dir, file_stem)
+    md_filename = f"{file_stem}.md"
+    md_path = os.path.join(file_output_dir, md_filename)
     return os.path.exists(md_path)
 
-def has_json_response(pdf_path, output_dir):
-    pdf_stem = Path(pdf_path).stem
-    pdf_output_dir = os.path.join(output_dir, pdf_stem)
-    json_filename = f"{pdf_stem}_response.json"
-    json_path = os.path.join(pdf_output_dir, json_filename)
+def has_json_response(file_path, output_dir):
+    file_stem = Path(file_path).stem
+    file_output_dir = os.path.join(output_dir, file_stem)
+    json_filename = f"{file_stem}_response.json"
+    json_path = os.path.join(file_output_dir, json_filename)
     return os.path.exists(json_path)
 
-def has_error(pdf_path, output_dir):
-    pdf_stem = Path(pdf_path).stem
-    pdf_output_dir = os.path.join(output_dir, pdf_stem)
-    error_filename = f"{pdf_stem}_error"
-    error_path = os.path.join(pdf_output_dir, error_filename)
+def has_error(file_path, output_dir):
+    file_stem = Path(file_path).stem
+    file_output_dir = os.path.join(output_dir, file_stem)
+    error_filename = f"{file_stem}_error"
+    error_path = os.path.join(file_output_dir, error_filename)
     return os.path.exists(error_path)
 
-def get_pdf_status(pdf_path, output_dir):
-    """
-    Returns the status of a PDF:
-    - "transcribed": MD file exists
-    - "json_ready": JSON response exists, but no MD file
-    - "error": Error file exists
-    - "needs_processing": Needs to be processed
-    """
-    if is_already_transcribed(pdf_path, output_dir):
+def get_file_status(file_path, output_dir):
+    if is_already_transcribed(file_path, output_dir):
         return "transcribed"
-    elif has_error(pdf_path, output_dir):
+    elif has_error(file_path, output_dir):
         return "error"
-    elif has_json_response(pdf_path, output_dir):
+    elif has_json_response(file_path, output_dir):
         return "json_ready"
     else:
         return "needs_processing"
